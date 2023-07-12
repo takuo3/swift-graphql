@@ -23,6 +23,7 @@ class FeedViewModel: ObservableObject {
     }
     
     private var cancellable: AnyCancellable?
+    private var refreshCancellable: AnyCancellable?
     
     /// Post a message with given content to the feed.
     func post() -> Void {
@@ -38,14 +39,28 @@ class FeedViewModel: ObservableObject {
             }, receiveValue: { result in })
     }
     
+    func cancelPost() {
+        if let cancellable = cancellable {
+            print("canceled")
+            cancellable.cancel()
+        }
+    }
+    
     /// Refreshes the feed with new data.
     func refresh() {
-        NetworkClient.shared.query(Message.feed)
+        self.refreshCancellable = NetworkClient.shared.query(Message.feed)
             .receive(on: RunLoop.main)
             .map { result in result.data }
             .catch({ err in
                 Just([])
             })
-            .assign(to: &self.$feed)
+            .assign(to: \.feed, on: self)
+    }
+    
+    func cancelRefresh() {
+        if let cancellable = refreshCancellable {
+            print("canceled")
+            cancellable.cancel()
+        }
     }
 }

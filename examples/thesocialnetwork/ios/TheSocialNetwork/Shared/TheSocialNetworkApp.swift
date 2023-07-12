@@ -15,6 +15,7 @@ struct TheSocialNetworkApp: App {
                 case .authenticated(let user):
                     self.app(user: user)
                 }
+
             }
             .onAppear {
                 AuthClient.loginFromKeychain()

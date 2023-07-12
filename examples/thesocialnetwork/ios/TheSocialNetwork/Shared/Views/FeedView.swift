@@ -8,6 +8,17 @@ struct FeedView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            Button("Cancel post") {
+                vm.cancelPost()
+            }
+            .buttonStyle(.primary)
+            .padding()
+            Button("Cancel refresh") {
+                vm.cancelRefresh()
+            }
+            .buttonStyle(.primary)
+            .padding()
+            
             self.header
             self.unread
             
@@ -51,7 +62,10 @@ struct FeedView: View {
             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
         }
         .listStyle(.plain)
-        .refreshable { self.vm.refresh() }
+        .refreshable {
+                        self.vm.refresh()
+            
+        }
     }
     
     @ViewBuilder
